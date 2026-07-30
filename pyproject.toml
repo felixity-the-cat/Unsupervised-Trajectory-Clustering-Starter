@@ -1,9 +1,17 @@
-[tool.black]
-line-length = 79
-target-version = [
-  "py310",
-  "py311"
-]
+[tool.ruff]
+    extend-exclude = [ "*.md" ]
+    line-length    = 88
 
-[tool.isort]
-profile = "black"
+    [tool.ruff.format]
+        docstring-code-format     = true
+        indent-style              = "space"
+        line-ending               = "lf"
+        quote-style               = "double"
+        skip-magic-trailing-comma = true
+
+    [tool.ruff.lint]
+        ignore = [ "E731" ]
+        select = [ "E", "F", "I" ]
+
+        [tool.ruff.lint.isort]
+            split-on-trailing-comma = false

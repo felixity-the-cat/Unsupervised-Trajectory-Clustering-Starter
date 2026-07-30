@@ -13,9 +13,7 @@ import sklearn.metrics as skl_mets
 from unsupervised_multimodal_trajectory_modeling.linear_gaussian import (
     marginalizable_mixture_model as mixmodel,
 )
-from unsupervised_multimodal_trajectory_modeling.util import (
-    util_state_space as util,
-)
+from unsupervised_multimodal_trajectory_modeling.util import util_state_space as util
 
 import data_synthetic as data
 import util as util_plotting
@@ -37,9 +35,7 @@ def main():
     ztrain_orig, xtrain, ctrain, *_ = data.get_data(1000)
     ztrain, std_param = util.standardize(ztrain_orig, return_params=True)
 
-    ztest_orig, xtest, ctest, *_ = data.get_data(
-        1000, rng=np.random.default_rng(0)
-    )
+    ztest_orig, xtest, ctest, *_ = data.get_data(1000, rng=np.random.default_rng(0))
     ztest = util.standardize(ztest_orig, params=std_param)
 
     # train mixture model
@@ -57,9 +53,7 @@ def main():
     predicted_ctest = np.array(
         [
             best_mdl.correspondence[c]
-            for c in best_mdl.mle_cluster_assignment(
-                states=ztest, observations=xtest
-            )
+            for c in best_mdl.mle_cluster_assignment(states=ztest, observations=xtest)
         ]
     )
 
@@ -80,16 +74,11 @@ def main():
         ]
     )
 
-    print(
-        "Confusion matrix - predictions from measurements only |".ljust(
-            79, "-"
-        )
-    )
+    print("Confusion matrix - predictions from measurements only |".ljust(79, "-"))
 
     print(
         cmat_test_no_hidden := skl_mets.confusion_matrix(
-            np.array(list(string.ascii_uppercase))[ctest],
-            predicted_ctest_no_hidden,
+            np.array(list(string.ascii_uppercase))[ctest], predicted_ctest_no_hidden
         )
     )
 
@@ -124,8 +113,7 @@ def main():
     )
     print(
         skl_mets.confusion_matrix(
-            np.array(list(string.ascii_uppercase))[ctest],
-            predicted_ctest_init,
+            np.array(list(string.ascii_uppercase))[ctest], predicted_ctest_init
         )
     )
 
@@ -146,15 +134,13 @@ def main():
     )
     print(
         skl_mets.confusion_matrix(
-            np.array(list(string.ascii_uppercase))[ctest],
-            predicted_ctest_init_meas,
+            np.array(list(string.ascii_uppercase))[ctest], predicted_ctest_init_meas
         )
     )
 
     util_plotting.plot_matrix(
         skl_mets.confusion_matrix(
-            np.array(list(string.ascii_uppercase))[ctest],
-            predicted_ctest_init_meas,
+            np.array(list(string.ascii_uppercase))[ctest], predicted_ctest_init_meas
         ),
         yticks=list(string.ascii_uppercase)[:3],
         ylabel="true",
@@ -168,9 +154,7 @@ def main():
         assignments=predicted_ctest,
         metric_name="First latent dimension",
         title="",
-        savename=pwd.joinpath("figures").joinpath(
-            "metric_v_cluster_over_time.png"
-        ),
+        savename=pwd.joinpath("figures").joinpath("metric_v_cluster_over_time.png"),
         show=False,
     )
 
@@ -182,17 +166,13 @@ def main():
         μσ_overlay=best_mdl.get_initial_means_and_stds(),
         mean_overlay=False,
         title="",
-        savename=str(
-            pwd.joinpath("figures").joinpath("histograms_by_cluster.png")
-        ),
+        savename=str(pwd.joinpath("figures").joinpath("histograms_by_cluster.png")),
         show=False,
         nbins=15,
     )
 
     _, probs = best_mdl.mle_cluster_assignment(
-        states=ztest,
-        observations=xtest,
-        return_probs=True,
+        states=ztest, observations=xtest, return_probs=True
     )
 
     util.plot_weighted_means_2d_trajectories(
@@ -203,11 +183,7 @@ def main():
             ]
         ].T,
         values=ztest_orig,
-        colors=[
-            "#0072CE",
-            "#E87722",
-            "#64A70B",
-        ],
+        colors=["#0072CE", "#E87722", "#64A70B"],
         saveloc=pwd.joinpath("figures").joinpath("weighted_cluster_means.png"),
         xlim=(np.nanmin(ztest_orig[..., 0]), np.nanmax(ztest_orig[..., 0])),
         ylim=(np.nanmin(ztest_orig[..., 1]), np.nanmax(ztest_orig[..., 1])),

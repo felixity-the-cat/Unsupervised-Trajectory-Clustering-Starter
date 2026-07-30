@@ -9,7 +9,6 @@ import pathlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sklearn.metrics as skl_mets
 
 pd.options.display.width = 79
 pd.options.display.max_columns = 1000
@@ -45,10 +44,7 @@ def plot_matrix(
         ax.set_xticks(np.arange(len(xticks)), labels=xticks)
         if rotate_xlabels:
             plt.setp(
-                ax.get_xticklabels(),
-                rotation=-30,
-                ha="right",
-                rotation_mode="anchor",
+                ax.get_xticklabels(), rotation=-30, ha="right", rotation_mode="anchor"
             )
     if yticks is not None:
         ax.set_yticks(np.arange(len(yticks)), labels=yticks)

@@ -12,12 +12,14 @@ import numpy as np
 import sklearn.metrics as skl_mets
 from unsupervised_multimodal_trajectory_modeling.nonlinear import (
     StateSpaceHybrid as ss_hybrid,
+)
+from unsupervised_multimodal_trajectory_modeling.nonlinear import (
     StateSpaceKNN as ss_knn,
+)
+from unsupervised_multimodal_trajectory_modeling.nonlinear import (
     state_space_model_mixture as mixmodel,
 )
-from unsupervised_multimodal_trajectory_modeling.util import (
-    util_state_space as util,
-)
+from unsupervised_multimodal_trajectory_modeling.util import util_state_space as util
 
 import data_synthetic as data
 
@@ -40,9 +42,7 @@ def main():
     ztrain_orig, xtrain, ctrain, *_ = data.get_data(1000)
     ztrain, std_param = util.standardize(ztrain_orig, return_params=True)
 
-    ztest_orig, xtest, ctest, *_ = data.get_data(
-        1000, rng=np.random.default_rng(0)
-    )
+    ztest_orig, xtest, ctest, *_ = data.get_data(1000, rng=np.random.default_rng(0))
     ztest = util.standardize(ztest_orig, params=std_param)
 
     for model_spec in [ss_knn, ss_hybrid]:

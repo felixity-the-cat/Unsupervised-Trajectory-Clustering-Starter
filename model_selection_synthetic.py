@@ -12,9 +12,7 @@ import pandas as pd
 from unsupervised_multimodal_trajectory_modeling.linear_gaussian import (
     marginalizable_mixture_model as mixmodel,
 )
-from unsupervised_multimodal_trajectory_modeling.util import (
-    util_state_space as util,
-)
+from unsupervised_multimodal_trajectory_modeling.util import util_state_space as util
 
 import data_synthetic as data
 
@@ -40,11 +38,7 @@ def main():
 
     mdls = [
         mixmodel.MMLinGaussSS_marginalizable(
-            n_clusters=n_clusters,
-            states=z,
-            observations=x,
-            init="k-means",
-            alpha=alpha,
+            n_clusters=n_clusters, states=z, observations=x, init="k-means", alpha=alpha
         ).train_with_multiple_random_starts(n_starts=100, use_cache=True)
         for n_clusters in n_cluster_list
     ]
@@ -52,7 +46,7 @@ def main():
     for s, attr in {
         # "Expected complete data log likelihood": "e_complete_data_log_lik",
         # "AIC": "aic",
-        "BIC": "bic",
+        "BIC": "bic"
     }.items():
         fig, ax = plt.subplots()
         ax.spines["right"].set_visible(False)
@@ -65,10 +59,7 @@ def main():
             color="#0072CE",
             linestyle="solid",
         )
-        plt.xticks(
-            ticks=n_cluster_list,
-            labels=n_cluster_list,
-        )
+        plt.xticks(ticks=n_cluster_list, labels=n_cluster_list)
         # plt.title(f"{s} vs. number of clusters")
         ax.set_xlabel("Number of clusters")
         ax.set_ylabel(s)

@@ -1,16 +1,17 @@
 ## Unsupervised Trajectory Clustering: Getting Started
 
-[![DOI](https://zenodo.org/badge/692067654.svg)](https://zenodo.org/badge/latestdoi/692067654)
+[![DOI](img/692067654.svg)](https://zenodo.org/badge/latestdoi/692067654)
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/burkh4rt/Unsupervised-Trajectory-Clustering-Starter/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/burkh4rt/Unsupervised-Trajectory-Clustering-Starter)
 
 The code uses mixtures of state space models to perform unsupervised clustering
 of short trajectories, as described in our recent paper [^1]. Within the state
 space framework, we let expensive-to-gather biomarkers correspond to hidden
-states and readily obtainable cognitive metrics correspond to measurements.
-Upon training with expectation maximization, we often find that our clusters
-stratify persons according to clinical outcome. Furthermore, we can effectively
-predict on held-out trajectories using cognitive metrics alone. Our approach
-accommodates missing data through model marginalization and generalizes across
-research and clinical cohorts.
+states and readily obtainable cognitive metrics correspond to measurements. Upon
+training with expectation maximization, we often find that our clusters stratify
+persons according to clinical outcome. Furthermore, we can effectively predict on
+held-out trajectories using cognitive metrics alone. Our approach accommodates
+missing data through model marginalization and generalizes across research and
+clinical cohorts.
 
 #### Data format
 
@@ -24,16 +25,16 @@ consisting of $`n_d`$ sequences of states and observations paired in time. We
 denote the states $`z_{1:T}^{i} = (z_1^i, z_2^i, \dotsc, z_T^i)`$ where
 $`z_t^i \in \mathbb{R}^d`$ corresponds to the state at time $`t`$ for the $`i`$
 th instance and measurements $`x_{1:T}^{i} = (x_1^i, x_2^i, \dotsc, x_T^i)`$
-where $`x_t^i \in \mathbb{R}^\ell`$ corresponds to the observation at time
-$`t`$ for the $`i`$ th instance. For the purposes of this code, we adopt the
-convention that collections of time-delineated sequences of vectors will be
-stored as 3-tensors, where the first dimension spans time $`1\leq t \leq T`$,
-the second dimension spans instances $`1\leq i \leq n_d`$ (these will almost
-always correspond to an individual or participant), and the third dimension
-spans the components of each state or observation vector (and so will have
-dimension either $`d`$ or $`\ell`$). We accommodate trajectories of differing
-lengths by standardising to the longest available trajectory in a dataset and
-appending `np.nan`'s to shorter trajectories.
+where $`x_t^i \in \mathbb{R}^\ell`$ corresponds to the observation at time $`t`$
+for the $`i`$ th instance. For the purposes of this code, we adopt the convention
+that collections of time-delineated sequences of vectors will be stored as
+3-tensors, where the first dimension spans time $`1\leq t \leq T`$, the second
+dimension spans instances $`1\leq i \leq n_d`$ (these will almost always
+correspond to an individual or participant), and the third dimension spans the
+components of each state or observation vector (and so will have dimension either
+$`d`$ or $`\ell`$). We accommodate trajectories of differing lengths by
+standardising to the longest available trajectory in a dataset and appending
+`np.nan`'s to shorter trajectories.
 
 #### Model specification
 
@@ -74,8 +75,8 @@ $$
 
 In particular, we assume that the variables we are modeling are continuous and
 changing over time. When we train a model like the above, we take a dataset
-$`\mathcal{D}`$ and an arbitrary set of cluster assignments $`c^i`$ (as these
-are also latent/ hidden from us) and iteratively perform M and E steps:
+$`\mathcal{D}`$ and an arbitrary set of cluster assignments $`c^i`$ (as these are
+also latent/ hidden from us) and iteratively perform M and E steps:
 
 - (E) Expectation step: given the current model, we assign each data instance
   $`(z^i_{1:T}, x^i_{1:T})`$ to the cluster to which it is mostly likely to
@@ -92,19 +93,17 @@ instances change their cluster assignment at a given iteration.
 All model training and predictions are done in Python. We provide a
 pip-installable package
 [unsupervised-multimodal-trajectory-modeling](https://pypi.org/project/unsupervised-multimodal-trajectory-modeling/)
-to do much of the work for you. It can be installed with dependencies as
-follows:
+to do much of the work for you. It can be installed with dependencies as follows:
 
 ```
 pip3 install -r requirements.txt
 ```
 
-or in a [virtual environment](https://docs.python.org/3/library/venv.html)
-with:
+or in a [virtual environment](https://docs.python.org/3/library/venv.html) with:
 
 ```
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
@@ -116,42 +115,42 @@ A typical workflow for a new dataset looks like this:
    and measurements as described above. Often, we include functionality for
    plotting trajectories of states by inferred cluster here. This is also a
    useful place to wrangle auxiliary data that will then be used to profile
-   learned clusters. For example [data_synthetic.py](./data_synthetic.py),
-   gives us trajectories in state space that look like this:
+   learned clusters. For example [data_synthetic.py](./data_synthetic.py), gives
+   us trajectories in state space that look like this:
 
-   <img src="./figures/synthetic_trajectories.png" 
-    alt="trajectories in state space" 
-    style="max-width:700px;width:100%">
+    <img src="./figures/synthetic_trajectories.png"
+        alt="trajectories in state space"
+        style="max-width:700px;width:100%">
 
 2. Run a model selection script to create plots of BIC vs. number of clusters.
    Import the `data_*.py` file you created in the previous step and modify
-   [model_selection_synthetic.py](./model_selection_synthetic.py) as needed.
-   This will give us a plot like so:
+   [model_selection_synthetic.py](./model_selection_synthetic.py) as needed. This
+   will give us a plot like so:
 
-   <img src="./figures/synthetic_elbow_plot_BIC.png" 
-       alt="plot of BIC vs. number of clusters" 
-       style="max-width:700px;width:100%">
+    <img src="./figures/synthetic_elbow_plot_BIC.png"
+           alt="plot of BIC vs. number of clusters"
+           style="max-width:700px;width:100%">
 
-   We know the data was generated from a 3-component mixture model, and the BIC
-   plot above reflects that. We now focus on models with 3 clusters.
+    We know the data was generated from a 3-component mixture model, and the BIC
+    plot above reflects that. We now focus on models with 3 clusters.
 
 3. Experiment with training and testing, like in
-   [inference_synthetic.py](./inference_synthetic.py). We can, for example,
-   train a model on one set and then predict cluster membership for a new
-   dataset. When both datasets were generated according to the same
-   specifications, we find very good agreement for this example, even when
-   predictions are made without access to the states. Here's a confusion matrix
-   (having generated the test set, we know ground truth):
+   [inference_synthetic.py](./inference_synthetic.py). We can, for example, train
+   a model on one set and then predict cluster membership for a new dataset. When
+   both datasets were generated according to the same specifications, we find
+   very good agreement for this example, even when predictions are made without
+   access to the states. Here's a confusion matrix (having generated the test
+   set, we know ground truth):
 
-   <img src="./figures/synthetic_confusion_matrix_test_no_hidden.png" 
-       alt="plot of BIC vs. number of clusters" 
-       style="max-width:500px;width:100%">
+    <img src="./figures/synthetic_confusion_matrix_test_no_hidden.png"
+           alt="plot of BIC vs. number of clusters"
+           style="max-width:500px;width:100%">
 
-   For real-life examples, we are often interested in profiling our clusters to
-   better understand them.
+    For real-life examples, we are often interested in profiling our clusters to
+    better understand them.
 
-4. We have an extended framework to incorporate nonlinearities into our state
-   and measurement models. Check out
+4. We have an extended framework to incorporate nonlinearities into our state and
+   measurement models. Check out
    [inference_nonlinear.py](./inference_nonlinear.py) for a minimal example.
 
 #### Caveats
@@ -168,8 +167,8 @@ any cluster becomes too small, training automatically terminates.
 
 Format code with:
 ```
-# isort --profile black .
-black .
+ruff format .
+ruff check .
 prettier --write --print-width 79 --prose-wrap always **/*.md
 ```
 
@@ -182,6 +181,11 @@ python3 data_synthetic.py
 python3 model_selection_synthetic.py
 python3 inference_synthetic.py
 python3 inference_nonlinear.py
+```
+
+Make requirements:
+```
+pip freeze > requirements.txt
 ```
 
 -->

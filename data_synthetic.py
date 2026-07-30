@@ -21,7 +21,7 @@ except ModuleNotFoundError:
             "unsupervised_multimodal_trajectory_modeling",
             "--upgrade",
             "--user",
-        ],
+        ]
     )
 
 import functools
@@ -33,12 +33,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.metrics as skl_mets
 from unsupervised_multimodal_trajectory_modeling.linear_gaussian import (
-    marginalizable_mixture_model as mixmodel,
     marginalizable_state_space_model as mssm,
 )
-from unsupervised_multimodal_trajectory_modeling.util import (
-    util_state_space as ss_util,
-)
+from unsupervised_multimodal_trajectory_modeling.util import util_state_space as ss_util
 
 name = "synthetic"
 pwd = pathlib.Path(__file__).absolute().parent
@@ -107,14 +104,7 @@ def get_data_by_length(
 
     """
 
-    μ, A, Γ, H, Λ, π = (
-        mdl["μ"],
-        mdl["A"],
-        mdl["Γ"],
-        mdl["H"],
-        mdl["Λ"],
-        mdl["π"],
-    )
+    μ, A, Γ, H, Λ, π = (mdl["μ"], mdl["A"], mdl["Γ"], mdl["H"], mdl["Λ"], mdl["π"])
 
     n_clusters, d_hidden, d_observed = H.shape
     assert A.shape == (n_clusters, d_hidden, d_hidden)
@@ -133,14 +123,7 @@ def get_data_by_length(
         z[:, i, :], x[:, i, :] = map(
             np.squeeze,
             mssm.sample_trajectory(
-                1,
-                n_timesteps,
-                μ[c[i]],
-                Γ[c[i]],
-                A[c[i]],
-                Γ[c[i]],
-                H[c[i]],
-                Λ[c[i]],
+                1, n_timesteps, μ[c[i]], Γ[c[i]], A[c[i]], Γ[c[i]], H[c[i]], Λ[c[i]]
             ),
         )
 
@@ -148,10 +131,7 @@ def get_data_by_length(
 
 
 def get_data(
-    n_data: int,
-    *,
-    rng=np.random.default_rng(42),
-    mdl: dict = get_default_model(),
+    n_data: int, *, rng=np.random.default_rng(42), mdl: dict = get_default_model()
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """returns trajectories w/ lengths 2,3,4 of the standard data
 
@@ -221,9 +201,7 @@ def set_model_correspondence(mdl, true_labels: np.array) -> None:
         discrepancy associated with using the permuted labels
 
         """
-        m = skl_mets.confusion_matrix(
-            true_labels, np.array(it)[mdl.cluster_assignment]
-        )
+        m = skl_mets.confusion_matrix(true_labels, np.array(it)[mdl.cluster_assignment])
         return np.sum(m) - np.trace(m)
 
     best_iter = min(
@@ -301,30 +279,18 @@ def plot_2d_trajectories(
             continue
         xcinit = hidden_states[:-1, inferred_clusters == c, 0].ravel()
         ycinit = hidden_states[:-1, inferred_clusters == c, 1].ravel()
-        xcdir = np.diff(
-            hidden_states[:, inferred_clusters == c, 0], axis=0
-        ).ravel()
-        ycdir = np.diff(
-            hidden_states[:, inferred_clusters == c, 1], axis=0
-        ).ravel()
+        xcdir = np.diff(hidden_states[:, inferred_clusters == c, 0], axis=0).ravel()
+        ycdir = np.diff(hidden_states[:, inferred_clusters == c, 1], axis=0).ravel()
         assert len(xcinit) == len(ycinit) == len(xcdir) == len(ycdir)
         cids = functools.reduce(
-            np.logical_and,
-            map(np.isfinite, [xcinit, ycinit, xcdir, ycdir]),
+            np.logical_and, map(np.isfinite, [xcinit, ycinit, xcdir, ycdir])
         )
         plt.quiver(
             xcinit[cids],
             ycinit[cids],
             xcdir[cids],
             ycdir[cids],
-            color=(
-                "#0072CE",
-                "#E87722",
-                "#64A70B",
-                "#93328E",
-                "#A81538",
-                "#4E5B31",
-            )[i],
+            color=("#0072CE", "#E87722", "#64A70B", "#93328E", "#A81538", "#4E5B31")[i],
             linestyle="solid",
             units="xy",
             angles="xy",
@@ -336,14 +302,7 @@ def plot_2d_trajectories(
         plt.scatter(
             hidden_states[:, inferred_clusters == c, 0].ravel(),
             hidden_states[:, inferred_clusters == c, 1].ravel(),
-            color=(
-                "#0072CE",
-                "#E87722",
-                "#64A70B",
-                "#93328E",
-                "#A81538",
-                "#4E5B31",
-            )[i],
+            color=("#0072CE", "#E87722", "#64A70B", "#93328E", "#A81538", "#4E5B31")[i],
             marker=("o", "v", "^", "s", "+", "x")[i],
             label=f"cluster {c}",
             s=5,
@@ -351,15 +310,10 @@ def plot_2d_trajectories(
         )
     handles, labels = ax.get_legend_handles_labels()
     unique_labels_dict = dict(zip(labels, handles))
-    ax.legend(
-        unique_labels_dict.values(),
-        unique_labels_dict.keys(),
-        fontsize="large",
-    )
+    ax.legend(unique_labels_dict.values(), unique_labels_dict.keys(), fontsize="large")
     plt.title(title)
     xlim, ylim = zip(
-        np.nanmin(hidden_states, axis=(0, 1)),
-        np.nanmax(hidden_states, axis=(0, 1)),
+        np.nanmin(hidden_states, axis=(0, 1)), np.nanmax(hidden_states, axis=(0, 1))
     )
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
@@ -377,9 +331,7 @@ if __name__ == "__main__":
     z, x, c, _, _ = get_data(1000)
     plot_2d_trajectories(
         None,
-        savename=pwd.joinpath("figures").joinpath(
-            "{}_trajectories".format(name)
-        ),
+        savename=pwd.joinpath("figures").joinpath("{}_trajectories".format(name)),
         title="Synthetic Latents",
         hidden_states=z,
         inferred_clusters=np.array(
